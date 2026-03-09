@@ -43,5 +43,7 @@ COPY tsconfig.json ./
 # Environment variables
 ENV NVIDIA_API_KEY=""
 
+EXPOSE 10000
+
 # Run with npx for reliable binary resolution
 CMD ["npx", "tsx", "src/mcp-server.ts"]

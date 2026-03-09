@@ -9,6 +9,8 @@ import { CanvasObserver, ScrapeEvent } from "./services/canvas-observer.js";
 import * as dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import express, { Request, Response } from "express";
 
 // Load environment variables from .env
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -146,10 +148,41 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 });
 
+// ... (previous request handlers stay the same)
+
 async function main() {
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
-    console.error("CanvasRead MCP Server running on stdio");
+    const PORT = process.env.PORT ? parseInt(process.env.PORT) : null;
+
+    if (PORT) {
+        // SSE Mode (Cloud/Render)
+        const app = express();
+        let transport: SSEServerTransport | null = null;
+
+        app.get("/sse", async (req: Request, res: Response) => {
+            console.error("New SSE connection established");
+            transport = new SSEServerTransport("/messages", res);
+            await server.connect(transport);
+        });
+
+        app.post("/messages", async (req: Request, res: Response) => {
+            if (transport) {
+                await transport.handlePostMessage(req, res);
+            } else {
+                res.status(400).send("No active SSE session");
+            }
+        });
+
+        app.listen(PORT, "0.0.0.0", () => {
+            console.error(`CanvasRead MCP Server running on SSE at http://0.0.0.0:${PORT}`);
+            console.error(`SSE endpoint: http://0.0.0.0:${PORT}/sse`);
+            console.error(`Message endpoint: http://0.0.0.0:${PORT}/messages`);
+        });
+    } else {
+        // Stdio Mode (Local)
+        const transport = new StdioServerTransport();
+        await server.connect(transport);
+        console.error("CanvasRead MCP Server running on stdio");
+    }
 }
 
 main().catch((error) => {
