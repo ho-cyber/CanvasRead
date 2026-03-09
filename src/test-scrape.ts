@@ -1,4 +1,4 @@
-import { CanvasObserver, ScrapeEvent } from './services/canvas-observer';
+import { CanvasObserver, ScrapeEvent } from './services/canvas-observer.js';
 
 async function test() {
     const observer = new CanvasObserver();

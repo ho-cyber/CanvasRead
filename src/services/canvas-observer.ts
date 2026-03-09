@@ -1,6 +1,6 @@
 import { chromium, Browser } from 'playwright';
-import { getChangedBoundingBox, BoundingBox } from '../utils/image-diff';
-import { analyzeCrop, generateFinalSummary } from './ollama.service';
+import { getChangedBoundingBox, BoundingBox } from '../utils/image-diff.js';
+import { analyzeCrop, generateFinalSummary } from './ollama.service.js';
 import sharp from 'sharp';
 
 export interface ScrapeEvent {
