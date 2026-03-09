@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000",
+  "executionArgs": {
+    "projectName": "CanvasRead",
+    "projectPath": "/Users/dhruv/Desktop/Coding/CanvasRead",
+    "testIds": [],
+    "additionalInstruction": "Test the landing page exists at / and the demo dashboard is now at /demo. Verify rate limiting is active on /demo.",
+    "serverMode": "development",
+    "envs": {
+      "API_KEY": "sk-user-ORYU5kap5qXf0ketCD2QB_1txcyLx4b4VO9XyDKNgKi-bR0lgRT2gUJJfZwW2mUdPGfyyvjAgQxmCRNfAMwJByrs3ncS1sxcgpLWNtnu3cBBwAGZdDsYhumHyrFd0LR4M_8"
+    }
+  },
+  "serverPort": 62073,
+  "proxy": "http://4237c727-dd11-48f4-bd3c-cf4537460a9a:TXzgsYupLUCFfH90NrBdFgRdieuKHIJD@tun.testsprite.com:8080"
+}

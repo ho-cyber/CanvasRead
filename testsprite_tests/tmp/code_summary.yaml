@@ -1,0 +1,37 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - Next.js
+  - Three.js
+  - Playwright
+  - Ollama
+routes:
+  - path: /
+    file: src/app/page.tsx
+    auth_required: false
+    description: Premium landing page highlighting token reduction features
+  - path: /demo
+    file: src/app/demo/page.tsx
+    auth_required: false
+    description: Demo dashboard with strict rate limits for website scraping
+features:
+  - name: Website Scraper (Demo)
+    description: Scrapes 3D or 2D websites to extract semantic scene context with rate limits.
+    files:
+      - src/app/demo/page.tsx
+      - src/components/Dashboard.tsx
+      - src/services/canvas-observer.ts
+      - src/mcp-server.ts
+    entry_route: /demo
+    user_interactions:
+      - Enter website URL in input field
+      - Select interaction mode (Passive or Active)
+      - Click "Start Scrape" button
+      - View real-time progress logs and token usage reduction indicators
+    api_calls: []
+    auth_required: false
+known_limitations:
+  - issue: Strict rate limits apply to the demo (2 scrapes per hour)
+    location: src/app/api/scrape/route.ts
+    impact: Users are blocked after 2 requests

@@ -1,0 +1,18 @@
+services:
+  - type: worker # MCP servers are usually background workers or web services
+    name: canvas-read-mcp
+    runtime: docker
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NVIDIA_API_KEY
+        sync: false # Set this in the Render Dashboard for security
+    
+    # Render will build the image natively on its AMD64 servers.
+    # No local docker build or push needed!
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+
+    # Health check (optional, but good practice)
+    # Since MCP uses stdio, it doesn't have a port, 
+    # so we use a worker type to avoid port binding errors.

@@ -1,0 +1,11 @@
+services:
+  canvas-read:
+    build: .
+    container_name: canvas-read-mcp
+    env_file: .env
+    # For stdio-based MCP, docker-compose is usually used to build/test images.
+    # If running as a service, we'd map ports, but MCP uses stdin/stdout.
+    stdin_open: true
+    tty: true
+    environment:
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}

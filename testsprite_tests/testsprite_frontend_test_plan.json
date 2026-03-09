@@ -1,0 +1,1138 @@
+[
+  {
+    "id": "TC001",
+    "title": "Interaction mode selection persists and is reflected when starting a scrape (scroll-driven)",
+    "description": "Verifies selecting a non-default interaction mode is possible and starting the scrape proceeds with progress UI visible.",
+    "category": "Website Scraper UI",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Type \"https://example.com\" into the website URL input field"
+      },
+      {
+        "type": "action",
+        "description": "Select \"scroll-driven\" from the interaction mode dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"scroll-driven\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Start Scrape\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Progress\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Tokens\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Interaction mode selection persists and is reflected when starting a scrape (hover-driven)",
+    "description": "Verifies selecting hover-driven mode is possible and the scrape can be started with live status areas present.",
+    "category": "Website Scraper UI",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Type \"https://example.com\" into the website URL input field"
+      },
+      {
+        "type": "action",
+        "description": "Select \"hover-driven\" from the interaction mode dropdown"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"hover-driven\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Start Scrape\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Progress\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Tokens\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Invalid URL validation blocks scrape and shows error message",
+    "description": "Verifies malformed or unsupported URLs show a visible validation error and do not proceed to progress logging.",
+    "category": "Website Scraper UI",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Type \"not a url\" into the website URL input field"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Start Scrape\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"invalid URL\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Progress\" is not visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on the website URL input field"
+      },
+      {
+        "type": "action",
+        "description": "Type \"https://example.com\" into the website URL input field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"invalid URL\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Empty URL submission shows required/validation message",
+    "description": "Verifies the user cannot start scraping without providing a URL and gets a visible validation message.",
+    "category": "Website Scraper UI",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Start Scrape\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"invalid URL\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Progress\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "No-meaningful-changes fallback notice appears for Three.js canvas pages and finishes with warning plus retry option",
+    "description": "Verifies the UI handles the \"no meaningful changes detected\" situation by showing fallback messaging and a warning outcome with retry option.",
+    "category": "Website Scraper UI",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Type \"https://threejs.org\" into the website URL input field"
+      },
+      {
+        "type": "action",
+        "description": "Select \"static\" from the interaction mode dropdown"
+      },
+      {
+        "type": "action",
+        "description": "Click \"Start Scrape\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"no meaningful changes detected\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"full-page\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Retry\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Meaningful change event is emitted when threshold + debounce conditions are met",
+    "description": "Verifies the UI shows a meaningful change event only after the change threshold is exceeded and the debounce window settles, and that a bounding-box style crop region is produced/passed downstream.",
+    "category": "Change Detection Engine (Layer 1)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"CanvasRead\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"https://threejs.org/examples/#webgl_animation_keyframes\" into the \"Target URL\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Change detection\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Meaningful change\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Changed region\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "User can cancel an active run and change detection stops updating",
+    "description": "Verifies that canceling an active change-detection run stops further event/log updates and shows a canceled/stopped state.",
+    "category": "Change Detection Engine (Layer 1)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"https://threejs.org/examples/#webgl_animation_keyframes\" into the \"Target URL\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Change detection\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Cancel\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Canceled\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Meaningful change\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Cross-origin canvas buffer access failure falls back to screenshot mode and is communicated to the UI",
+    "description": "Verifies that when direct canvas buffer read is blocked, the UI indicates a screenshot-based fallback is being used for hashing/change detection.",
+    "category": "Change Detection Engine (Layer 1)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"https://maps.google.com\" into the \"Target URL\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Canvas buffer access blocked\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Using screenshot fallback\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"May be inaccurate\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Invalid target URL is rejected and run does not start",
+    "description": "Verifies the UI validates the target URL and prevents starting change detection with an invalid URL.",
+    "category": "Change Detection Engine (Layer 1)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Fill \"not-a-url\" into the \"Target URL\" field"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Enter a valid URL\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Change detection\" is not visible"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Real-time extraction preview updates after a canvas change event",
+    "description": "Verifies that when a change is detected, the UI shows an updated extraction preview reflecting the latest structured output.",
+    "category": "Selective Vision Snap & Structured JSON Output (Layers 2 & 3)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Dashboard\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Extraction preview\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\" (or \"Run\") to begin scraping"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Running\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Extraction preview\" contains visible JSON-like content"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Token counter increments when new structured results are published",
+    "description": "Verifies the token counter updates in real time as new vision snaps are processed and merged.",
+    "category": "Selective Vision Snap & Structured JSON Output (Layers 2 & 3)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Token counter\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\" (or \"Run\") to begin scraping"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Running\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Token counter\" shows a numeric value"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for element \"Token counter\" value to change"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "UI indicates a snap failure after repeated invalid (non-JSON) model output",
+    "description": "Verifies that when the pipeline cannot validate structured JSON after retries, the UI marks the snap as failed and continues running.",
+    "category": "Selective Vision Snap & Structured JSON Output (Layers 2 & 3)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\" (or \"Run\") to begin scraping"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Running\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"Failed\" to be visible in the snaps/events list (or status area)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Retry\" is visible in the snap details or log area"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Running\" is still visible after the failure indicator appears"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Snap failure logs an error message without breaking the extraction preview UI",
+    "description": "Verifies an error is surfaced for invalid JSON responses and the extraction preview remains accessible/visible.",
+    "category": "Selective Vision Snap & Structured JSON Output (Layers 2 & 3)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\" (or \"Run\") to begin scraping"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"Error\" to be visible in the log/status panel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Extraction preview\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Extraction preview\" still shows visible content (not blank)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Failed\" is visible for at least one snap/event"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Low-confidence results are flagged for manual review and still allow other items to merge",
+    "description": "Verifies that decorative/incorrect labels are flagged for review while other high-confidence results continue to merge into the preview.",
+    "category": "Selective Vision Snap & Structured JSON Output (Layers 2 & 3)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\" (or \"Run\") to begin scraping"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"Manual review\" (or \"Review\") to be visible in the extraction area or items list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Extraction preview\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"labels\" to be visible in the extraction preview"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least one other non-flagged item/result is visible alongside the review flag"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Confidence-check flag does not block subsequent snaps from updating token counter",
+    "description": "Verifies that after a manual-review flag appears, the pipeline continues processing later snaps and token counter continues to change.",
+    "category": "Selective Vision Snap & Structured JSON Output (Layers 2 & 3)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\" (or \"Run\") to begin scraping"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"Manual review\" (or \"Review\") to be visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Token counter\" shows a numeric value"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for element \"Token counter\" value to change"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Running\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Structured output shape remains consistent in UI after multiple updates (labels/values/descriptions/coordinates)",
+    "description": "Verifies that the extraction preview consistently presents the expected fields across multiple snap updates.",
+    "category": "Selective Vision Snap & Structured JSON Output (Layers 2 & 3)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to \"/\""
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Start\" (or \"Run\") to begin scraping"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"labels\" to be visible in the extraction preview"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"values\" to be visible in the extraction preview"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"descriptions\" to be visible in the extraction preview"
+      },
+      {
+        "type": "assertion",
+        "description": "Wait for text \"coordinates\" to be visible in the extraction preview"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Run Demo Mode pipeline from Demo Tile #1 and view final JSON output",
+    "description": "Verifies the one-click demo flow for a curated demo site including prefilled URL/mode, pipeline progress indicators, token counter, and final structured JSON output.",
+    "category": "Demo Mode & Preloaded Sites",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 1\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard shows a pre-populated demo URL"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Start Scrape\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Token\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Snaps\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"JSON\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Total\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Run Demo Mode pipeline from Demo Tile #2 and verify output appears",
+    "description": "Verifies that a second curated demo tile also preloads settings and produces a visible final structured JSON output with a token total.",
+    "category": "Demo Mode & Preloaded Sites",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 2\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard shows a pre-populated demo URL"
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Start Scrape\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Token\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"JSON\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Total\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Switch between demo tiles updates the pre-populated demo URL before starting scrape",
+    "description": "Verifies that choosing a different demo tile updates the prefilled demo URL and does not require manual input before scraping.",
+    "category": "Demo Mode & Preloaded Sites",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 1\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard shows a pre-populated demo URL"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 3\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard shows a pre-populated demo URL"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Start Scrape\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Token counter is visible while pipeline is running in demo mode",
+    "description": "Verifies that after starting a demo scrape, a visible token counter is shown during the run (live feedback present).",
+    "category": "Demo Mode & Preloaded Sites",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 1\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Start Scrape\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Token\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Token\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Start Scrape\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC021",
+    "title": "Pipeline progress shows snaps taken indicator during demo scrape",
+    "description": "Verifies that the UI shows a snaps/progress indicator while the demo pipeline is running.",
+    "category": "Demo Mode & Preloaded Sites",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 2\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Start Scrape\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Snaps\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"taken\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Token\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC022",
+    "title": "Demo site load failure shows a demo load error message",
+    "description": "Verifies that when a demo site cannot be loaded (blocked resource or failure), the UI shows an explicit demo load error state.",
+    "category": "Demo Mode & Preloaded Sites",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 3\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Start Scrape\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"error\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"failed\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"demo\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC023",
+    "title": "From demo load error, user can try the next demo option",
+    "description": "Verifies the recovery path from a demo load error by selecting an option to try the next demo and returning to a ready-to-run state.",
+    "category": "Demo Mode & Preloaded Sites",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 3\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Start Scrape\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"error\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the button labeled \"Try next demo\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the dashboard shows a pre-populated demo URL"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Start Scrape\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC024",
+    "title": "From demo load error, user can view pre-recorded demo output",
+    "description": "Verifies that when a demo fails to load, the user can still view a pre-recorded demo output including structured JSON and token total.",
+    "category": "Demo Mode & Preloaded Sites",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the demo site tile labeled \"Demo 3\""
+      },
+      {
+        "type": "action",
+        "description": "Click the \"Start Scrape\" button"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"error\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the button labeled \"View pre-recorded output\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"JSON\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Total\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC025",
+    "title": "Run TestSprite core flow suite and view pass/fail summary",
+    "description": "Verifies a developer can start the core TestSprite suite from the QA panel and see a completed pass/fail summary.",
+    "category": "TestSprite QA Integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Test / QA\" to open the Test / QA panel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"TestSprite\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Core Flows\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Running\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Summary\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Passed\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Failed\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC026",
+    "title": "Verify core flow suite includes valid URL -> structured JSON out in logs",
+    "description": "Verifies the core run surfaces log evidence that the valid scrape pipeline produced structured JSON output.",
+    "category": "TestSprite QA Integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Test / QA\" to open the Test / QA panel"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Core Flows\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Completed\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"View detailed logs\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Valid URL\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Structured JSON\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"JSON\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC027",
+    "title": "Verify token counter increment is reflected in core flow run logs",
+    "description": "Verifies the core run indicates token usage increased during the scrape pipeline execution.",
+    "category": "TestSprite QA Integration",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Test / QA\" to open the Test / QA panel"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Core Flows\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Completed\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"View detailed logs\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Token\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"increment\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC028",
+    "title": "Open a failing core test log entry from the summary view",
+    "description": "Verifies a developer can drill into failure details by clicking a failure log link from the TestSprite summary.",
+    "category": "TestSprite QA Integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Test / QA\" to open the Test / QA panel"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Core Flows\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Summary\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Failed\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Failure details\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Trace\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC029",
+    "title": "Run TestSprite edge case suite and confirm an invalid URL failure is reported",
+    "description": "Verifies the edge case suite reports a failure for invalid URL scenarios and surfaces diagnostic information.",
+    "category": "TestSprite QA Integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Test / QA\" to open the Test / QA panel"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Edge Cases\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Running\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Completed\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Invalid URL\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Failed\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC030",
+    "title": "Edge case: oversized canvas timeout shows mitigation recommendation",
+    "description": "Verifies a timeout failure for oversized canvas extraction includes a recommended mitigation (fallback to full-page snap).",
+    "category": "TestSprite QA Integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Test / QA\" to open the Test / QA panel"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Edge Cases\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Oversized canvas\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Timeout\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"View detailed logs\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Recommended mitigation\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"fallback to full-page snap\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC031",
+    "title": "Edge case: no meaningful state changes is detected and reported in logs",
+    "description": "Verifies the edge case suite includes a scenario where no pixel-diff/state change occurs and that it is reported in logs.",
+    "category": "TestSprite QA Integration",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Test / QA\" to open the Test / QA panel"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Edge Cases\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Completed\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"View detailed logs\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"No meaningful state changes\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"pixel-diff\" is visible"
+      }
+    ]
+  },
+  {
+    "id": "TC032",
+    "title": "Re-run TestSprite edge case suite after reviewing a failure and confirm a new run starts",
+    "description": "Verifies a developer can re-run the edge case suite after inspecting failures, and the UI reflects a fresh run lifecycle.",
+    "category": "TestSprite QA Integration",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Test / QA\" to open the Test / QA panel"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Edge Cases\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Completed\" is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Run Edge Cases\""
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Running\" is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Completed\" is visible"
+      }
+    ]
+  }
+]

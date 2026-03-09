@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Test</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #222; }
+        canvas { display: block; }
+        #ui { position: absolute; top: 10px; left: 10px; color: white; font-family: sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <h1>CanvasRead Test</h1>
+        <p>Score: <span id="score">0</span></p>
+    </div>
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreSpan = document.getElementById('score');
+        
+        let x = 100;
+        let y = 100;
+        let dx = 2;
+        let dy = 2;
+        let score = 0;
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw a stationary box
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(400, 300, 50, 50);
+            
+            // Draw a moving box
+            ctx.fillStyle = 'red';
+            ctx.fillRect(x, y, 50, 50);
+            
+            x += dx;
+            y += dy;
+            
+            if (x < 0 || x > canvas.width - 50) dx = -dx;
+            if (y < 0 || y > canvas.height - 50) dy = -dy;
+            
+            // Update score text randomly
+            if (Math.random() < 0.05) {
+                score += 10;
+                scoreSpan.innerText = score;
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
