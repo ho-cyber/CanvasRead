@@ -5,20 +5,21 @@ WORKDIR /app
 
 # Copy package files first for layer caching
 COPY package*.json ./
+COPY tsconfig.mcp.json ./
 
-# Use BuildKit cache mount to speeds up installs
+# Install ALL dependencies (including dev) for compilation
 RUN --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
+    npm ci
+
+# Copy source and build the mcp server to JS
+COPY src/ ./src/
+RUN npm run build:mcp
 
 # --- Stage 2: Final Runner ---
-# We use node:20 (FULL DEBIAN) as requested (NOT slim or alpine).
-# We then install ONLY the dependencies needed for Chromium.
-# This keeps the image "Full" but reduces size from 2.3GB to ~600MB.
 FROM node:20 AS runner
 WORKDIR /app
 
 # Install ONLY the system dependencies for Chromium
-# This is MUCH faster to push than the full Playwright image
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libnss3 libatk-bridge2.0-0 libx11-xcb1 libgtk-3-0 libxcomposite1 \
     libxdamage1 libxrandr2 libgbm1 libasound2 libpangocairo-1.0-0 \
@@ -28,22 +29,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Ensure we have the correct NODE_ENV
 ENV NODE_ENV=production
 
-# Copy ONLY the production dependencies from builder
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Copy only production files
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Install ONLY Chromium (skips Firefox and WebKit which makes the image push fast)
+# Copy compiled JS from builder
+COPY --from=builder /app/dist ./dist
+
+# Install Chromium (Playwright needs this)
 ENV PLAYWRIGHT_BROWSERS_PATH=/app/ms-playwright
 RUN npx playwright install chromium
 
-# Selective copying of source code
-COPY src/ ./src/
-COPY tsconfig.json ./
-
 # Environment variables
 ENV NVIDIA_API_KEY=""
+ENV PORT=10000
 
 EXPOSE 10000
 
-# Run with npx for reliable binary resolution
-CMD ["npx", "tsx", "src/mcp-server.ts"]
+# Run the compiled JS with Node directly (much more stable)
+CMD ["node", "dist/mcp-server.js"]
