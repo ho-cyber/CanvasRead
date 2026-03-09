@@ -16,17 +16,94 @@ import express, { Request, Response } from "express";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
-const server = new Server(
-    {
-        name: "canvas-read-server",
-        version: "0.1.0",
-    },
-    {
-        capabilities: {
-            tools: {},
-        },
-    }
-);
+// Setup the MCP server logic in a reusable way
+function setupServerHandlers(server: Server) {
+    server.setRequestHandler(ListToolsRequestSchema, async () => {
+        return {
+            tools: [
+                {
+                    name: "scrape_website",
+                    description: "Scrapes a website (3D WebGL or standard HTML), extracts semantic scene context, detects states, and generates a final AI summary. Best for understanding the content and behavior of complex visual sites.",
+                    inputSchema: {
+                        type: "object",
+                        properties: {
+                            url: { type: "string" },
+                            selector: { type: "string" },
+                            interactionMode: { type: "string", enum: ["passive", "active"] },
+                        },
+                        required: ["url"],
+                    },
+                },
+            ],
+        };
+    });
+
+    server.setRequestHandler(CallToolRequestSchema, async (request) => {
+        if (request.params.name !== "scrape_website") {
+            throw new Error(`Unknown tool: ${request.params.name}`);
+        }
+
+        const { url, selector, interactionMode } = ScrapeWebsiteSchema.parse(request.params.arguments);
+
+        // Check rate limit
+        const rateLimit = checkRateLimit(url);
+        if (!rateLimit.allowed) {
+            return {
+                isError: true,
+                content: [
+                    {
+                        type: "text",
+                        text: `Rate limit exceeded for domain: ${new URL(url).hostname}. Please wait ${rateLimit.waitTimeMinutes} more minutes before scraping this site again.`,
+                    },
+                ],
+            };
+        }
+
+        const observer = new CanvasObserver();
+        let finalResult: any = null;
+        const progressLogs: string[] = [];
+
+        try {
+            const result = await new Promise((resolve, reject) => {
+                observer.start(
+                    url,
+                    (event: ScrapeEvent) => {
+                        if (event.type === 'progress') {
+                            progressLogs.push(event.data.message);
+                        } else if (event.type === 'done') {
+                            resolve(event.data);
+                        } else if (event.type === 'error') {
+                            reject(new Error(event.data.message));
+                        }
+                    },
+                    selector,
+                    interactionMode
+                ).catch(reject);
+            });
+
+            finalResult = result;
+
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: `Scrape successful for: ${url}\n\n--- Semantic Scene Document ---\n${finalResult.sceneDocument}\n\n--- Execution Logs ---\n${progressLogs.join("\n")}`,
+                    },
+                ],
+            };
+        } catch (error: any) {
+            return {
+                isError: true,
+                content: [
+                    {
+                        type: "text",
+                        text: `Scrape failed: ${error.message}\n\n--- Logs ---\n${progressLogs.join("\n")}`,
+                    },
+                ],
+            };
+        }
+    });
+}
 
 const ScrapeWebsiteSchema = z.object({
     url: z.string().url().describe("The URL of the website to scrape (3D or 2D)"),
@@ -62,91 +139,7 @@ function checkRateLimit(url: string): { allowed: boolean; waitTimeMinutes?: numb
     }
 }
 
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-    return {
-        tools: [
-            {
-                name: "scrape_website",
-                description: "Scrapes a website (3D WebGL or standard HTML), extracts semantic scene context, detects states, and generates a final AI summary. Best for understanding the content and behavior of complex visual sites.",
-                inputSchema: {
-                    type: "object",
-                    properties: {
-                        url: { type: "string" },
-                        selector: { type: "string" },
-                        interactionMode: { type: "string", enum: ["passive", "active"] },
-                    },
-                    required: ["url"],
-                },
-            },
-        ],
-    };
-});
-
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    if (request.params.name !== "scrape_website") {
-        throw new Error(`Unknown tool: ${request.params.name}`);
-    }
-
-    const { url, selector, interactionMode } = ScrapeWebsiteSchema.parse(request.params.arguments);
-
-    // Check rate limit
-    const rateLimit = checkRateLimit(url);
-    if (!rateLimit.allowed) {
-        return {
-            isError: true,
-            content: [
-                {
-                    type: "text",
-                    text: `Rate limit exceeded for domain: ${new URL(url).hostname}. Please wait ${rateLimit.waitTimeMinutes} more minutes before scraping this site again.`,
-                },
-            ],
-        };
-    }
-
-    const observer = new CanvasObserver();
-    let finalResult: any = null;
-    const progressLogs: string[] = [];
-
-    try {
-        const result = await new Promise((resolve, reject) => {
-            observer.start(
-                url,
-                (event: ScrapeEvent) => {
-                    if (event.type === 'progress') {
-                        progressLogs.push(event.data.message);
-                    } else if (event.type === 'done') {
-                        resolve(event.data);
-                    } else if (event.type === 'error') {
-                        reject(new Error(event.data.message));
-                    }
-                },
-                selector,
-                interactionMode
-            ).catch(reject);
-        });
-
-        finalResult = result;
-
-        return {
-            content: [
-                {
-                    type: "text",
-                    text: `Scrape successful for: ${url}\n\n--- Semantic Scene Document ---\n${finalResult.sceneDocument}\n\n--- Execution Logs ---\n${progressLogs.join("\n")}`,
-                },
-            ],
-        };
-    } catch (error: any) {
-        return {
-            isError: true,
-            content: [
-                {
-                    type: "text",
-                    text: `Scrape failed: ${error.message}\n\n--- Logs ---\n${progressLogs.join("\n")}`,
-                },
-            ],
-        };
-    }
-});
+// The tool handlers are now handled by setupServerHandlers
 
 // ... (previous request handlers stay the same)
 
@@ -159,7 +152,7 @@ async function main() {
 
         // Detailed request logging for Debugging
         app.use((req, res, next) => {
-            console.error(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+            console.error(`[${new Date().toISOString()}] ${req.method} ${req.url} - IP: ${req.ip}`);
             next();
         });
 
@@ -170,50 +163,83 @@ async function main() {
 
         // Health check for Render
         app.get("/", (req, res) => {
-            res.send("CanvasRead MCP Server is running. Use /sse for MCP connection.");
+            res.send("CanvasRead MCP Server (SSE) is running. Connect via /sse");
         });
 
+        // Unified SSE start endpoint
         app.get("/sse", async (req: Request, res: Response) => {
             const sessionId = Math.random().toString(36).substring(7);
-            console.error(`Attempting new SSE connection, session: ${sessionId}`);
+            console.error(`Establishing new SSE connection: ${sessionId}`);
 
+            // Create a dedicated server instance for this session
+            const sessionServer = new Server(
+                { name: "canvas-read-server", version: "0.1.0" },
+                { capabilities: { tools: {} } }
+            );
+            setupServerHandlers(sessionServer);
+
+            // Important: Use absolute URL if possible, or relative with leading slash
             const transport = new SSEServerTransport(`/messages/${sessionId}`, res);
             mcpTransports.set(sessionId, transport);
 
-            await server.connect(transport);
-            console.error(`SSE session ${sessionId} connected`);
+            await sessionServer.connect(transport);
+            console.error(`Session ${sessionId} connected successfully`);
 
             req.on("close", () => {
-                console.error(`SSE session ${sessionId} closed`);
+                console.error(`Session ${sessionId} disconnected`);
                 mcpTransports.delete(sessionId);
             });
         });
 
+        // Message post endpoint
         app.post("/messages/:sessionId", async (req: Request, res: Response) => {
             const { sessionId } = req.params;
-            console.error(`POST message for session ${sessionId}`);
             const transport = mcpTransports.get(sessionId);
 
             if (transport) {
                 await transport.handlePostMessage(req, res);
             } else {
-                console.error(`POST for unknown session ${sessionId}`);
-                res.status(404).send("Session not found");
+                console.error(`POST failed: Session ${sessionId} not found`);
+                res.status(404).json({ error: "Session not found" });
             }
         });
 
-        // Additional POST handlers to resolve potential 404s/405s
-        app.post("/sse", (req, res) => res.status(405).send("Use GET /sse to start session"));
-        app.post("/messages", (req, res) => res.status(400).send("Session ID required in URL"));
+        // Helper route to handle direct POST /sse (often tried by clients with ?sessionId=...)
+        app.post("/sse", async (req, res) => {
+            const sessionId = req.query.sessionId as string;
+            if (sessionId) {
+                const transport = mcpTransports.get(sessionId);
+                if (transport) {
+                    return await transport.handlePostMessage(req, res);
+                }
+            }
+            console.error(`Direct POST to /sse failed. SessionId: ${sessionId || 'none'}`);
+            res.status(405).json({
+                error: "Method Not Allowed",
+                message: "MCP SSE requires a GET request to establish a stream first, or a valid sessionId query parameter for POSTs."
+            });
+        });
+
+        // Catch-all for debugging 404s
+        app.use((req, res) => {
+            console.error(`404 Unhandled Request: ${req.method} ${req.url}`);
+            res.status(404).json({ error: "Not Found", path: req.url });
+        });
 
         app.listen(PORT, "0.0.0.0", () => {
-            console.error(`CanvasRead MCP Server running on SSE at http://0.0.0.0:${PORT}`);
+            console.error(`CanvasRead Server active on port ${PORT} (SSE Mode)`);
         });
     } else {
         // Stdio Mode (Local)
+        const server = new Server(
+            { name: "canvas-read-server", version: "0.1.0" },
+            { capabilities: { tools: {} } }
+        );
+        setupServerHandlers(server);
+
         const transport = new StdioServerTransport();
         await server.connect(transport);
-        console.error("CanvasRead MCP Server running on stdio");
+        console.error("CanvasRead Server active (Stdio Mode)");
     }
 }
 
