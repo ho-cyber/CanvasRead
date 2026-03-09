@@ -156,7 +156,7 @@ async function main() {
             next();
         });
 
-        app.use(express.json());
+        // app.use(express.json()); // Removed: consumes stream, breaking MCP SSEServerTransport
 
         // Map to store transports by session
         const mcpTransports = new Map<string, SSEServerTransport>();
@@ -168,6 +168,12 @@ async function main() {
 
         // Unified SSE start endpoint
         app.get("/sse", async (req: Request, res: Response) => {
+            // Performance headers for SSE through proxies like Render/Nginx
+            res.setHeader('Content-Type', 'text/event-stream');
+            res.setHeader('Cache-Control', 'no-cache');
+            res.setHeader('Connection', 'keep-alive');
+            res.setHeader('X-Accel-Buffering', 'no');
+
             const sessionId = Math.random().toString(36).substring(7);
             console.error(`Establishing new SSE connection: ${sessionId}`);
 
