@@ -156,7 +156,16 @@ async function main() {
     if (PORT) {
         // SSE Mode (Cloud/Render)
         const app = express();
+
+        // IMPORTANT: Required for MCP-SSE to parse POST bodies
+        app.use(express.json());
+
         let transport: SSEServerTransport | null = null;
+
+        // Health check for Render
+        app.get("/", (req, res) => {
+            res.send("CanvasRead MCP Server is running. Use /sse for MCP connection.");
+        });
 
         app.get("/sse", async (req: Request, res: Response) => {
             console.error("New SSE connection established");
@@ -165,17 +174,16 @@ async function main() {
         });
 
         app.post("/messages", async (req: Request, res: Response) => {
+            console.error("Received message POST");
             if (transport) {
                 await transport.handlePostMessage(req, res);
             } else {
-                res.status(400).send("No active SSE session");
+                res.status(400).send("No active SSE session. Connect via GET /sse first.");
             }
         });
 
         app.listen(PORT, "0.0.0.0", () => {
             console.error(`CanvasRead MCP Server running on SSE at http://0.0.0.0:${PORT}`);
-            console.error(`SSE endpoint: http://0.0.0.0:${PORT}/sse`);
-            console.error(`Message endpoint: http://0.0.0.0:${PORT}/messages`);
         });
     } else {
         // Stdio Mode (Local)
