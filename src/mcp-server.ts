@@ -157,43 +157,54 @@ async function main() {
         // SSE Mode (Cloud/Render)
         const app = express();
 
-        // IMPORTANT: Required for MCP-SSE to parse POST bodies
+        // Detailed request logging for Debugging
+        app.use((req, res, next) => {
+            console.error(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+            next();
+        });
+
         app.use(express.json());
 
-        let transport: SSEServerTransport | null = null;
+        // Map to store transports by session
+        const mcpTransports = new Map<string, SSEServerTransport>();
 
         // Health check for Render
         app.get("/", (req, res) => {
             res.send("CanvasRead MCP Server is running. Use /sse for MCP connection.");
         });
 
-        // Unified SSE endpoint - handles both the stream (GET) and messages (POST)
         app.get("/sse", async (req: Request, res: Response) => {
-            console.error("New SSE connection request received");
-            transport = new SSEServerTransport("/sse", res);
+            const sessionId = Math.random().toString(36).substring(7);
+            console.error(`Attempting new SSE connection, session: ${sessionId}`);
+
+            const transport = new SSEServerTransport(`/messages/${sessionId}`, res);
+            mcpTransports.set(sessionId, transport);
+
             await server.connect(transport);
-            console.error("SSE transport connected");
+            console.error(`SSE session ${sessionId} connected`);
+
+            req.on("close", () => {
+                console.error(`SSE session ${sessionId} closed`);
+                mcpTransports.delete(sessionId);
+            });
         });
 
-        app.post("/sse", async (req: Request, res: Response) => {
-            console.error("Received POST message on /sse");
+        app.post("/messages/:sessionId", async (req: Request, res: Response) => {
+            const { sessionId } = req.params;
+            console.error(`POST message for session ${sessionId}`);
+            const transport = mcpTransports.get(sessionId);
+
             if (transport) {
                 await transport.handlePostMessage(req, res);
             } else {
-                console.error("POST received but no active SSE transport exists");
-                res.status(400).send("No active SSE session. Connect via GET /sse first.");
+                console.error(`POST for unknown session ${sessionId}`);
+                res.status(404).send("Session not found");
             }
         });
 
-        // Fallback for /messages just in case
-        app.post("/messages", async (req: Request, res: Response) => {
-            console.error("Received POST message on /messages");
-            if (transport) {
-                await transport.handlePostMessage(req, res);
-            } else {
-                res.status(400).send("No active SSE session.");
-            }
-        });
+        // Additional POST handlers to resolve potential 404s/405s
+        app.post("/sse", (req, res) => res.status(405).send("Use GET /sse to start session"));
+        app.post("/messages", (req, res) => res.status(400).send("Session ID required in URL"));
 
         app.listen(PORT, "0.0.0.0", () => {
             console.error(`CanvasRead MCP Server running on SSE at http://0.0.0.0:${PORT}`);
