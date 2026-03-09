@@ -167,18 +167,31 @@ async function main() {
             res.send("CanvasRead MCP Server is running. Use /sse for MCP connection.");
         });
 
+        // Unified SSE endpoint - handles both the stream (GET) and messages (POST)
         app.get("/sse", async (req: Request, res: Response) => {
-            console.error("New SSE connection established");
-            transport = new SSEServerTransport("/messages", res);
+            console.error("New SSE connection request received");
+            transport = new SSEServerTransport("/sse", res);
             await server.connect(transport);
+            console.error("SSE transport connected");
         });
 
-        app.post("/messages", async (req: Request, res: Response) => {
-            console.error("Received message POST");
+        app.post("/sse", async (req: Request, res: Response) => {
+            console.error("Received POST message on /sse");
             if (transport) {
                 await transport.handlePostMessage(req, res);
             } else {
+                console.error("POST received but no active SSE transport exists");
                 res.status(400).send("No active SSE session. Connect via GET /sse first.");
+            }
+        });
+
+        // Fallback for /messages just in case
+        app.post("/messages", async (req: Request, res: Response) => {
+            console.error("Received POST message on /messages");
+            if (transport) {
+                await transport.handlePostMessage(req, res);
+            } else {
+                res.status(400).send("No active SSE session.");
             }
         });
 
