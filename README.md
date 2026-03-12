@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# <img src="./public/logo.png" width="48" height="48" align="center" /> CanvasRead
 
-## Getting Started
+### **The Web Went Dark. We Turned The Lights On.**
 
-First, run the development server:
+**World's First 3D Web Intelligence Layer.** 
 
+Modern AI agents, scrapers, and accessibility tools are completely blind to `40%` of the web that renders inside `<canvas>` and WebGL. CanvasRead solves this by providing a high-performance scene graph extraction and 3D intelligence layer for the modern web.
+
+---
+
+## 🚀 The Vision: Beyond OCR
+
+CanvasRead isn't just "reading text". It's a **Clone Studio** that reconstructs the underlying logic and geometry of 3D environments, complex data visualizations, and interactive canvases.
+
+- **Capture**: Snap high-fidelity frames from any `<canvas>` element.
+- **Clone**: Reconstruct the scene graph into a machine-readable JSON spec.
+- **Analyze**: Perform queryable searches on 3D geometry and interactive nodes.
+
+## ✨ Core Capabilities
+
+### 🏢 Clone Studio Pipeline
+Transform opaque canvas pixels into a standard JSON specification. Perfect for building replicas, snapshots, or automated auditing tools.
+
+### 📊 WebGL Benchmarking
+High-performance analysis of render cycles and geometry complexity. Built on **NVIDIA NIM** for lightning-fast inference.
+
+### ♿️ Accessibility Injection
+Inject ARIA-compliant metadata into blind canvas regions, making 3D data visualizations accessible to screen readers for the first time.
+
+### 🤖 MCP Agent Integration (Optional)
+A powerful Model Context Protocol (MCP) server that allows AI agents (like Claude Desktop) to "see" and interact with canvas-heavy sites directly.
+
+---
+
+## 🛠 Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router, Turbopack)
+- **3D Engine**: [Three.js](https://threejs.org/) / WebGL
+- **Intelligence**: NVIDIA NIM API / JSON Schema Clone Spec
+- **Styling**: Tailwind CSS
+- **Deployment**: Render / Docker
+
+## ⚡️ Quick Start
+
+### 1. Prerequisites
+Ensure you have Node.js 18+ and `npm` installed.
+
+### 2. Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/ho-cyber/CanvasRead.git
+cd CanvasRead
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to enter the **Live Studio**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Running Benchmarks
+Check the performance of your canvas cloning pipeline:
+```bash
+node scripts/benchmark.mjs
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🌍 Open Source & Community
 
-To learn more about Next.js, take a look at the following resources:
+CanvasRead is built for the community. If you're building a tool that needs to "see" the 3D web, we want to hear from you.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **GitHub**: [ho-cyber/CanvasRead](https://github.com/ho-cyber/CanvasRead)
+- **License**: MIT
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<p align="center">
+  Built with ❤️ for the future of the 3D Web.
+</p>

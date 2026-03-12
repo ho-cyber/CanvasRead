@@ -25,7 +25,7 @@ export default function LandingPage() {
             </Link>
             <Link
               className="text-cr-muted text-[14px] px-2.5 py-2 rounded-xl transition-all duration-140 hover:text-cr-text hover:bg-white/5"
-              href="https://github.com/dhruvagrawals/CanvasRead"
+              href="https://github.com/ho-cyber/CanvasRead"
               target="_blank"
               rel="noreferrer"
             >
