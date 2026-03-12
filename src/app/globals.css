@@ -1,10 +1,39 @@
 @import "tailwindcss";
 
+@theme {
+    --color-cr-bg: #03040a;
+    --color-cr-panel: rgba(255, 255, 255, 0.04);
+    --color-cr-border: rgba(255, 255, 255, 0.08);
+    --color-cr-text: rgba(255, 255, 255, 0.95);
+    --color-cr-muted: rgba(255, 255, 255, 0.60);
+    --color-cr-faint: rgba(255, 255, 255, 0.40);
+    --radius-cr: 18px;
+    --shadow-cr: 0 40px 100px rgba(0, 0, 0, 0.8);
+
+    --animate-particle-fade: particleFade 1s ease-out forwards;
+}
+
+@keyframes particleFade {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.4) rotate(90deg);
+    }
+}
+
+.star-clip {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
 :root {
     --background: #000000;
     --foreground: #ffffff;
-    --accent: #00f2ff;
-    --accent-muted: rgba(0, 242, 255, 0.2);
+    --accent: #ffffff;
+    --accent-muted: rgba(255, 255, 255, 0.1);
     --glass: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(255, 255, 255, 0.1);
     color-scheme: dark;
@@ -18,21 +47,15 @@ body,
     padding: 0;
 }
 
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-}
-
 body {
     background: var(--background);
     color: var(--foreground);
     font-family: var(--font-geist-sans), sans-serif;
     overflow-x: hidden;
-    scrollbar-color: rgba(79, 140, 255, 0.40) rgba(0, 0, 0, 0.20);
+    scrollbar-color: rgba(255, 255, 255, 0.20) rgba(0, 0, 0, 0.20);
 }
 
-/* Dark scrollbars (avoid bright white side bar) */
+/* Dark scrollbars */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -43,22 +66,13 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(79, 140, 255, 0.35);
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 999px;
     border: 2px solid rgba(0, 0, 0, 0.35);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(79, 140, 255, 0.55);
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-button {
-    cursor: pointer;
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .glow {

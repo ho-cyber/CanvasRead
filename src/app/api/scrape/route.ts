@@ -3,7 +3,7 @@ import { CanvasObserver, ScrapeEvent } from '@/services/canvas-observer';
 
 // Simple in-memory rate limiting for demo
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
-const MAX_REQUESTS = 2;
+const MAX_REQUESTS = 50;
 const ipCache = new Map<string, { count: number; firstRequest: number }>();
 
 export async function POST(req: NextRequest) {

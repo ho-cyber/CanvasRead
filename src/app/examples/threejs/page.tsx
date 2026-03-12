@@ -19,7 +19,7 @@ export default function DemoPage() {
                 borderBottom: '1px solid rgba(255, 77, 77, 0.2)',
                 backdropFilter: 'blur(4px)'
             }}>
-                <strong>DEMO MODE:</strong> Strict rate limits apply (2 scrapes per hour).
+                <strong>DEMO MODE:</strong> Generous rate limits apply (50 scrapes per hour).
             </div>
             <Dashboard />
         </main>

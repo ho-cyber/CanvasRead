@@ -27,8 +27,8 @@ function Scene({ progress }: { progress: number }) {
   const ringA = useRef<THREE.Mesh>(null);
   const ringB = useRef<THREE.Mesh>(null);
 
-  const accent = useMemo(() => new THREE.Color('#4f8cff'), []);
-  const accent2 = useMemo(() => new THREE.Color('#1d4ed8'), []);
+  const accent = useMemo(() => new THREE.Color('#ffffff'), []);
+  const accent2 = useMemo(() => new THREE.Color('#333333'), []);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
@@ -48,7 +48,7 @@ function Scene({ progress }: { progress: number }) {
     if (ringA.current) ringA.current.rotation.z = t * 0.25;
     if (ringB.current) ringB.current.rotation.x = -t * 0.22;
 
-    // Subtle color shift with scroll
+    // Subtle monochrome shift with scroll
     const mix = new THREE.Color().copy(accent).lerp(accent2, p * 0.8);
     if (frame.current?.material) {
       const mat = frame.current.material as unknown as { color?: THREE.Color };
@@ -63,8 +63,8 @@ function Scene({ progress }: { progress: number }) {
   return (
     <>
       <ambientLight intensity={0.28} />
-      <directionalLight position={[-4, 5, 5]} intensity={1.2} color="#9cc3ff" />
-      <directionalLight position={[4, -2, 6]} intensity={0.8} color="#7ea6ff" />
+      <directionalLight position={[-4, 5, 5]} intensity={1.2} color="#ffffff" />
+      <directionalLight position={[4, -2, 6]} intensity={0.8} color="#cccccc" />
       <Environment preset="city" />
 
       {/* Shift motif to the right so it doesn't compete with headline copy */}
